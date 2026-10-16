@@ -1,7 +1,12 @@
 from collections.abc import Mapping
 
 import httpx
-from tenacity import AsyncRetrying, retry_if_exception, stop_after_attempt, wait_exponential_jitter
+from tenacity import (
+    AsyncRetrying,
+    retry_if_exception,
+    stop_after_attempt,
+    wait_exponential_jitter,
+)
 
 from signalai_connectors.config import settings
 
