@@ -1,7 +1,6 @@
-from datetime import datetime, UTC
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class CompanySearchInput(BaseModel):
@@ -14,7 +13,14 @@ class CompanyGetInput(BaseModel):
     company_name: str | None = Field(default=None, max_length=200)
     linkedin_url: str | None = Field(default=None, max_length=500)
 
+    @model_validator(mode="after")
+    def require_identifier(self) -> "CompanyGetInput":
+        if not any((self.domain, self.company_name, self.linkedin_url)):
+            raise ValueError("company_identifier_required")
+        return self
+
     def validate_identifier(self) -> None:
+        # Kept as an explicit method for provider callers outside HTTP request validation.
         if not any((self.domain, self.company_name, self.linkedin_url)):
             raise ValueError("company_identifier_required")
 
@@ -41,7 +47,6 @@ class CompanyEvidence(BaseModel):
     employee_count: int | None = None
     location: str | None = None
     source_url: str | None = None
-    retrieved_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     raw_metadata: dict[str, Any] = Field(default_factory=dict)
 
 
