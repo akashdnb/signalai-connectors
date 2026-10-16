@@ -17,7 +17,10 @@ _TRANSIENT_STATUS_CODES = {429, 500, 502, 503, 504}
 def _retryable(error: BaseException) -> bool:
     if isinstance(error, (httpx.ConnectError, httpx.ReadTimeout)):
         return True
-    return isinstance(error, httpx.HTTPStatusError) and error.response.status_code in _TRANSIENT_STATUS_CODES
+    return (
+        isinstance(error, httpx.HTTPStatusError)
+        and error.response.status_code in _TRANSIENT_STATUS_CODES
+    )
 
 
 class ConnectorHttpClient:

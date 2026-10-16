@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     max_concurrency: int = Field(default=50, ge=1, le=500)
     apollo_base_url: str = "https://api.apollo.io/api/v1"
     apollo_api_key: str | None = None
+    service_token: str | None = None
 
 
 settings = Settings()
